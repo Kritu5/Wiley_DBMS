@@ -1,16 +1,4 @@
--- Modify Data: 
--- INSERT –                use various forms of the INSERT statement to insert data into a table.
--- INSERT Multiple Rows –  insert multiple rows into a table.
--- INSERT INTO SELECT –    insert data into a table from the result set of a query.
--- INSERT IGNORE  –        the INSERT IGNORE statement that inserts rows into a table and ignores rows that cause errors.
--- UPDATE –                UPDATE statement and its options to update data in database tables.
--- UPDATE JOIN –           cross-table update using UPDATE JOIN statement with INNER JOIN and LEFT JOIN.
--- DELETE –                DELETE statement to delete rows from one or more tables.
--- ON DELETE CASCADE –     ON DELETE CASCADE referential action for a foreign key to delete data from a child table automatically when you delete data from a parent table.
--- DELETE JOIN –           delete data from multiple tables.
--- REPLACE –               how to insert or update data depends on whether data exists in the table or not.
--- Prepared Statement –    how to use the prepared statement to execute a query
--- 
+
 
 CREATE TABLE IF NOT EXISTS tasks (
     task_id INT AUTO_INCREMENT,
@@ -47,8 +35,7 @@ SHOW VARIABLES LIKE 'max_allowed_packet';
 
 SET GLOBAL max_allowed_packet=size;
 
----------
--- INSERT ON DUPLICATE KEY UPDATE 
+
 
 CREATE TABLE devices(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -62,10 +49,6 @@ VALUES('Rourter F1'),('Switch 1'),('Switch 2');
 INSERT INTO devices(id, name)
 VALUES(4,'Printer')
 ON DUPLICATE KEY UPDATE name = "My Printer";
-
---------------------
--- INSERT IGNORE -> warning - 1062
--- INSERT STRICT is default , error - 1406
 
 CREATE TABLE subscribers(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,10 +64,6 @@ VALUES('venkat.bvs@gmail.com'), ('venkat.s@gmail.com');
 INSERT IGNORE INTO subscribers(email)
 VALUES('venkat.bvs@gmail.com'), ('venkat.s@gmail.com');
 
-------------------------------------------------- 
-
--- UPDATE 
-
 select firstname, lastname, email from employees where employeeNumber = 1056;
 
 UPDATE employees 
@@ -98,8 +77,6 @@ SET
     lastName = "Paterson"
 where employeeNumber = 1056;
 
-
--- update and replace values
 UPDATE employees 
 SET 
     email = REPLACE(email,'@classicmodelcars.com', '@wileyedge.com')
@@ -139,22 +116,10 @@ WHERE
     country = 'USA' AND 
     state = 'CA';
 
-
-
-
-
-
-
-
-
-
--- MySQL UPDATE JOIN 
-
 CREATE DATABASE IF NOT EXISTS empdb;
 
 USE empdb;
 
--- create tables
 CREATE TABLE merits (
     performance INT(11) NOT NULL,
     percentage FLOAT NOT NULL,
@@ -170,14 +135,14 @@ CREATE TABLE employees (
     CONSTRAINT fk_performance FOREIGN KEY (performance)
         REFERENCES merits (performance)
 );
--- insert data for merits table
+
 INSERT INTO merits(performance,percentage)
 VALUES(1,0),
       (2,0.01),
       (3,0.03),
       (4,0.05),
       (5,0.08);
--- insert data for employees table
+
 INSERT INTO employees(emp_name,performance,salary)      
 VALUES('Venkat', 1, 50000),
       ('Rishav Raj', 3, 65000),
@@ -187,7 +152,6 @@ VALUES('Venkat', 1, 50000),
       ('Riti Rathore', 2, 45000),
       ('Sachin Kumar', 3, 55000);
 
--- Adjust the salary of employees based on their performance
 
 UPDATE employees
     INNER JOIN 
@@ -195,16 +159,6 @@ UPDATE employees
 SET
     salary = salary + salary * percentage
 
-
-
-
-
-
-
-
-
-
--- MySQL DELETE JOIN with INNER JOIN
 DROP TABLE IF EXISTS t1, t2;
 
 CREATE TABLE t1 (
@@ -219,17 +173,6 @@ CREATE TABLE t2 (
 INSERT INTO t1 VALUES (1),(2),(3);
 
 INSERT INTO t2(id,ref) VALUES('A',1),('B',2),('C',3);
-
-
--- MySQL ON DELETE CASCADE
--- ON DELETE CASCADE referential action for a foreign key to delete data from multiple related tables
-
-
-/* If we have two tables:buildings and rooms . In this database model,
-each building has one or many rooms. However, 
-each room belongs to one only one building.
-A room would not exist without a building.
-*/
 
 CREATE TABLE buildings (
     building_no INT PRIMARY KEY AUTO_INCREMENT,
@@ -257,31 +200,8 @@ VALUES('Amazon',1),
       ('Marketing',2),
       ('Showroom',2);
 
-
-
-
-
-
-
-
-
--- MySQL REPLACE statement
-
 REPLACE [INTO] table_name(column_list)
 VALUES(value_list);
-
--- The MySQL REPLACE statement is an extension to the SQL Standard. The MySQL REPLACE statement works as follows:
-
--- Step 1. Insert a new row into the table, if a duplicate key error occurs.
-
--- Step 2. If the insertion fails due to a duplicate-key error occurs:
-
--- Delete the conflicting row that causes the duplicate key error from the table.
--- Insert the new row into the table again.
--- To determine whether the new row that already exists in the table, MySQL uses PRIMARY KEY or UNIQUE KEY index. If the table does not have one of these indexes, the REPLACE works like an  INSERT statement.
-
--- To use the REPLACE statement, you need to have at least both INSERT and DELETE privileges for the table.
-
 
 CREATE TABLE cities (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -295,44 +215,9 @@ VALUES('New York',8008278),
 	  ('Los Angeles',3694825),
 	  ('San Diego',1223405);
 
-
-
--- MySQL prepared statement
-
--- MySQL prepared statement to make your queries execute faster and more secure.
-
-/* Prior MySQL version 4.1, a query is sent to the MySQL server in the textual format. 
-
-In turn, MySQL returns the data to the client using textual protocol. 
-
-MySQL has to fully parse the query and transforms 
-the result set into a string before returning it to the client.
-
-The textual protocol has serious performance implication. 
-To address this issue, MySQL added a new feature called prepared statement since version 4.1.
-
-The prepared statement takes advantage of client/server binary protocol. 
-It passes the query that contains placeholders (?) to the MySQL Server
-*/
-
-
 SELECT * 
 FROM products 
 WHERE productCode = ?;
-
--- When MySQL executes this query with different productcode values, it does not have to fully parse the query. As a result, this helps MySQL execute the query faster, especially when MySQL executes the same query multiple times.
-
--- Since the prepared statement uses placeholders (?), this helps avoid many variants of SQL injection hence make your application more secure.
-
--- MySQL prepared statement usage
--- In order to use MySQL prepared statement, you use three following statements:
-
--- PREPARE             –    prepare a statement for execution.
--- EXECUTE             –    execute a prepared statement prepared by the PREPARE statement.
--- DEALLOCATE PREPARE  –    release a prepared statement.
-
---Execution flow:
-
     PREPARE -> EXECUTE -> DEALLOCATE PREPARE
 
 

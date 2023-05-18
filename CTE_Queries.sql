@@ -1,30 +1,8 @@
--- COMMON TABLE expression or CTE
--- CONSTRUCT COMPLEX queries IN A MORE READABLE MANNER
--- CTE  results only in execution scope 
-
--- MySQL introduced the common table expression or CTE  feature 
--- since version 8.0 so you should have MySQL 8.0+ in order to practice with the statements  
-
--- What is a common table expression or CTE
--- A common table expression is a named temporary result set that exists only within the execution scope of a single SQL statement e.g.,SELECT, INSERT, UPDATE, or DELETE.
-
--- Similar to a derived table, a CTE is not stored as an object and last only during the execution of a query.
-
--- Unlike a derived table, a CTE can be self-referencing (a recursive CTE) or can be referenced multiple times in the same query. In addition, a CTE provides better readability and performance in comparison with a derived table.
-
-
--- MySQL CTE syntax
--- The structure of a CTE includes the name, an optional column list, and a query that defines the CTE. After the CTE is defined, you can use it as a view in a SELECT, INSERT, UPDATE, DELETE, or CREATE VIEW statement.
 
 WITH cte_name (column_list) AS (
     query
 ) 
 SELECT * FROM cte_name;
-
-
--- The following example illustrates how to use a CTE for querying data from the customers table
--- only to demonstrate CTE
-
 WITH customers_in_usa AS (
     SELECT 
         customerName, state
@@ -33,13 +11,6 @@ WITH customers_in_usa AS (
     WHERE 
         country = 'USA'
 ) SELECT customerName FROM customers_in_usa WHERE state = 'CA' ORDER BY customerName;
-
--- see the above query the name of the CTE is customers_in_usa, the query that defines the CTE returns two columns customerName and state. Hence, the customers_in_usa CTE returns all customers located in the USA.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------
--- After defining the customers_in_usa CTE, we referenced it in the SELECT statement to select only customers located in California.
-
 WITH topsales2003 AS (
     SELECT 
         salesRepEmployeeNumber employeeNumber,
